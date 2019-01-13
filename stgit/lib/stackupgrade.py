@@ -27,7 +27,7 @@ def update_to_current_format_version(repository, branch):
     on external functions that may change during a format version
     bump, since it must remain able to process older formats."""
 
-    branch_dir = os.path.join(repository.directory, 'patches', branch)
+    branch_dir = os.path.join(repository.common_directory, 'patches', branch)
     key = format_version_key(branch)
     old_key = 'branch.%s.stgitformatversion' % branch
 

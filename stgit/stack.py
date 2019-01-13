@@ -33,6 +33,7 @@ from stgit.utils import (
     rename,
     write_string,
     write_strings,
+    get_common_dir,
 )
 
 __copyright__ = """
@@ -312,11 +313,12 @@ class PatchSet(StgitObject):
             else:
                 self.set_name(git.get_head_file())
             self.__base_dir = basedir.get()
+            self.__common_dir = get_common_dir(self.__base_dir)
         except git.GitException as ex:
             raise StackException('GIT tree not initialised: %s' % ex)
 
         self._set_dir(
-            os.path.join(self.__base_dir, 'patches', self.get_name())
+            os.path.join(self.__common_dir, 'patches', self.get_name())
         )
 
     def get_name(self):
@@ -327,6 +329,9 @@ class PatchSet(StgitObject):
 
     def _basedir(self):
         return self.__base_dir
+
+    def _commondir(self):
+        return self.__common_dir
 
     def get_head(self):
         """Return the head of the branch
@@ -599,7 +604,7 @@ class Series(PatchSet):
             git.rename_ref('refs/patches/%s/%s.log' % (self.get_name(), patch),
                            'refs/patches/%s/%s.log' % (to_name, patch))
         if os.path.isdir(self._dir()):
-            rename(os.path.join(self._basedir(), 'patches'),
+            rename(os.path.join(self._commondir(), 'patches'),
                    self.get_name(), to_stack.get_name())
 
         # Rename the config section

@@ -381,6 +381,26 @@ def parse_name_email_date(address):
     return str_list[0]
 
 
+def get_common_dir(git_dir):
+     """
+     Returns the common git directory that should have the patches, hooks and object directories.
+     This helper method exists in order to support multiple worktrees.
+     :param git_dir: The git directory of the current worktree.
+     :return: The common directory.
+     """
+     assert isinstance(git_dir, text)
+
+     worktree_commondir_file_path = os.path.join(git_dir, 'commondir')
+
+     if os.path.exists(worktree_commondir_file_path):
+         # We are in some linked worktree, we need to use the commondir file
+         # in order to get the common directory path.
+         common_dir_path = read_string(worktree_commondir_file_path)
+         return os.path.join(git_dir, common_dir_path)
+     else:
+         # We are in the main worktree git directory.
+         return git_dir
+
 # Exit codes.
 STGIT_SUCCESS = 0        # everything's OK
 STGIT_GENERAL_ERROR = 1  # seems to be non-command-specific error

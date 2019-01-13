@@ -807,6 +807,7 @@ class Repository(RunWithEnv):
 
     def __init__(self, directory):
         self.__git_dir = directory
+        self.__git_common_dir = utils.get_common_dir(directory)
         self.__refs = Refs(self)
         self.__blobs = ObjectCache(lambda sha1: Blob(self, sha1))
         self.__trees = ObjectCache(lambda sha1: Tree(self, sha1))
@@ -874,6 +875,10 @@ class Repository(RunWithEnv):
     @property
     def directory(self):
         return self.__git_dir
+
+    @property
+    def common_directory(self):
+        return self.__git_common_dir
 
     @property
     def refs(self):

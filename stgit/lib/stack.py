@@ -255,7 +255,7 @@ class Stack(git.Branch):
     @property
     def directory(self):
         return os.path.join(
-            self.repository.directory, self.__repo_subdir, self.name
+            self.repository.common_directory, self.__repo_subdir, self.name
         )
 
     @property
@@ -301,7 +301,7 @@ class Stack(git.Branch):
         # make sure that the corresponding Git branch exists
         git.Branch(repository, name)
 
-        dir = os.path.join(repository.directory, cls.__repo_subdir, name)
+        dir = os.path.join(repository.common_directory, cls.__repo_subdir, name)
         compat_dir = os.path.join(dir, 'patches')
         if os.path.exists(dir):
             raise StackException('%s: branch already initialized' % name)
